@@ -15,8 +15,100 @@
         Spuddle Archive
     </title>
     <style>
+        @media only screen and (min-width:700px) {
+            #outer {
+                flex-direction: row;
+                height: calc(100vh - 2.5rem);
+            }
+
+            #choice label {
+                font-size: 1.5vw;
+            }
+
+            #topbar>#top-left {
+                font-size: clamp(.6rem, 1.5vh, 1.4vw);
+                align-self: end;
+                text-align: center;
+                grid-row: 2;
+                grid-column: 2;
+            }
+
+            #topbar>#top-right {
+                display: contents;
+            }
+
+            #topbar>#top-right>#list-alpha {
+                grid-area: 1 / 1 / 1 / 1;
+                font-size: clamp(1.3rem, 3.4vh, 2.7vw);
+                width: 100%;
+                justify-self: start;
+                align-self: end;
+            }
+
+            #topbar>#top-right>#show-guesses {
+                font-size: clamp(1.3rem, 3.4vh, 2.7vw);
+                width: 100%;
+                grid-area: 1 / 3 / 1 / 3;
+                justify-self: end;
+                align-self: end;
+            }
+
+            #topbar>#top-right>* {
+                width: min-content;
+            }
+
+            #topbar {
+                display: grid;
+                height: 2.5rem;
+                max-height: 2.5rem;
+                grid-template-columns: 30% 40% 30%;
+                grid-template-rows: 80% 20%;
+            }
+
+            #title {
+                grid-row: 1;
+                grid-column: 2;
+                font-size: clamp(2rem, 5.5vh, 4vw);
+            }
+
+        }
+
+        @media only screen and (max-width:699px) {
+            #outer {
+                flex-direction: column;
+            }
+
+            #choice label {
+                font-size: min(5.3vh, 6.6vw);
+            }
+
+            #topbar>#top-left {
+                order: 999;
+                font-size: 5.2vw;
+            }
+
+            #topbar>#top-right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            #topbar>#top-right>* {
+                width: 100%;
+                font-size: 9vw;
+            }
+
+            #topbar {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #title {
+                font-size: 11.5vw;
+            }
+        }
+
         body,
-        p {
+        div {
             margin: 0;
             padding: 0;
             font-family: monospace;
@@ -26,17 +118,17 @@
             display: none;
         }
 
-
         body {
             --color-background: #111;
             --color-background-accent: #222;
             --color-background-accent-2: #333;
             --color-background-accent-3: #555;
             --color-green: #272;
-            --color-red: #a44;
+            --color-red: #944;
             --color-red-2: #722;
-            --color-yellow: #993;
-            --color-text: #ddd;
+            --color-yellow: #787800;
+            --color-text: #ccc;
+            --color-text-2: #999;
             --color-border: #aaa;
         }
 
@@ -55,12 +147,11 @@
 
         #outer {
             display: flex;
-            flex-direction: row;
-            height: calc(100vh - 2.5rem);
+
         }
 
         #choice {
-            display: flex;
+            display: none;
             flex-direction: column;
             user-select: none;
             min-width: 25vi;
@@ -70,8 +161,8 @@
 
         #choice label {
             cursor: pointer;
-            font-size: 1.3rem;
             padding: 0.05rem .6rem;
+            white-space: nowrap;
         }
 
         #choice label:nth-child(4n) {
@@ -101,7 +192,7 @@
         }
 
         .n {
-            background-color: var(--color-red);
+            background-color: var(--color-background-accent-2);
         }
 
         .l {
@@ -122,12 +213,11 @@
         }
 
         .innerinner {
-            /*padding-inline-start: 1.5em;*/
             grid-column: 2;
         }
 
         .day-cont {
-            display: flex;
+            display: none;
             flex-direction: column;
         }
 
@@ -140,19 +230,13 @@
         }
 
         #topbar {
-            font-size: 2rem;
             text-align: center;
-            height: 2.5rem;
-            max-height: 2.5rem;
-            display: flex;
-            flex-direction: row;
             align-items: center;
             justify-content: center;
-            position: relative;
             user-select: none;
         }
 
-        .day-cont:nth-child(2n of :not(.not-visible)) {
+        .day-cont:nth-child(2n + 1 of :not(.not-visible)) {
             background-color: var(--color-background-accent);
         }
 
@@ -165,43 +249,56 @@
         .data-date {
             font-size: 1.5rem;
             padding-inline-start: 1.5rem;
-            /* text-decoration-line: underline; */
             font-weight: bold;
-            border-block: 2px solid var(--color-border);
+            border-block-end: 2px solid var(--color-border);
         }
 
-        #data.no-guesses .single-game {
+        #outer.no-guesses .single-game {
             grid-template-rows: min-content;
         }
 
-        #data.no-guesses .innerinner {
+        #outer.no-guesses .innerinner {
             display: none;
         }
 
-        #show-guesses {
-            position: absolute;
+        #top-left {
+            left: .6rem;
+            bottom: 0;
+            font-size: 1rem;
+            color: var(--color-text-2);
+        }
+
+        #top-left::before {
+            content: "Last update: ";
+        }
+
+        #top-right {
             right: 0;
             top: auto;
             bottom: auto;
-            background-color: var(--color-red);
-            height: 100%;
-            padding-inline: .5rem;
-            width: min-content;
-            white-space: nowrap;
-            cursor: pointer;
+            display: flex;
         }
 
-        #show-guesses:has(>#input-show-guesses:checked) {
+        #top-right>* {
+            padding-inline: .5rem;
+            white-space: nowrap;
+            cursor: pointer;
+            background-color: var(--color-red);
+            box-sizing: border-box;
+        }
+
+        #top-right>*:has(>input:checked) {
             background-color: var(--color-green);
         }
 
-        #input-show-guesses {
+        #input-show-guesses,
+        #input-list-alpha {
             appearance: none;
             padding: 0;
             margin: 0;
         }
 
-        #data.no-guesses .words-cont {
+        #outer.no-guesses .words-cont {
             row-gap: .3rem;
         }
 
@@ -219,7 +316,7 @@
             position: relative;
         }
 
-        #data:not(.no-guesses) .game-lost::after {
+        #outer:not(.no-guesses) .game-lost::after {
             content: "\1F641";
             position: absolute;
             top: 1.8rem;
@@ -235,7 +332,7 @@
             position: relative;
         }
 
-        #data:not(.no-guesses) .game-aborked::after {
+        #outer:not(.no-guesses) .game-aborked::after {
             content: "\1F4A9";
             position: absolute;
             top: 1.8rem;
@@ -245,6 +342,59 @@
         .game-aborked>*:not(.innerinner) {
             background-color: var(--color-red-2);
         }
+
+        .no-alpha .day-cont {
+            display: flex;
+        }
+
+        .no-alpha #alpha {
+            display: none;
+        }
+
+        .no-alpha #choice {
+            display: flex;
+        }
+
+        #alpha {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #alpha-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(3.1rem, 1fr));
+            text-align: center;
+            width: 100%;
+            padding-inline: .35rem;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        .no-guesses .a-g {
+            display: none;
+        }
+
+        #alpha-top {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: .3rem 0 .2rem 0;
+            box-sizing: border-box;
+        }
+
+        .day-cont:not(.not-visible):has(~ .day-cont:not(.not-visible)) {
+            border-block-end: 2px solid var(--color-border);
+        }
+
+        .single-game>*:first-child {
+            padding-inline-start: .3rem;
+            box-sizing: border-box;
+        }
+
+        .single-game>*:nth-child(2) {
+            padding-inline-end: .3rem;
+            box-sizing: border-box;
+        }
+
     </style>
     <script>
         (() => {
@@ -345,7 +495,7 @@
                         { g: "audio,early,carat,karma" },
                         { g: "juice,great,medal,pekan,kebab" },
                         { g: "tango,lemon,heron" },
-                        { g: "ocean,grout,pillot,moist,vomit" },
+                        { g: "ocean,grout,pilot,moist,vomit" },
                         { g: "unite,viral,yokai" },
                         { g: "azide,quark,baton,manga,canna" },
                         { g: "adieu,rebus,venue" },
@@ -445,7 +595,7 @@
                         { g: "route,nadir,crisp,shirk" },
                         { g: "quota,oiler,onion" },
                         { g: "great,audio,lanky,franc" },
-                        { g: "ready, miaou,quash,guava" },
+                        { g: "ready,miaou,quash,guava" },
                         { g: "pious,haunt,query,cubed,fudge,judge", l: 1 },
                         { g: "piano,jumbo,metro,motto" },
                         { g: "gluon,muted,quasi,yucca" },
@@ -478,6 +628,12 @@
                     ], // 2025-04-28 end
                 }; // data end
 
+                // value: bool -> is_correct_word
+                let all_words_map = new Map();
+
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const ordinals = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th", "20th", "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th", "30th", "31st"];
+
                 let map = new Map();
                 Object.keys(data).forEach(s => {
                     const o = {
@@ -507,6 +663,11 @@
                     else if (bk.d < ak.d) return -1;
                     return 0;
                 }));
+
+                {
+                    const o = Array.from(map)[0][0];
+                    document.getElementById("top-left").textContent = `${o.y} ${months[o.m - 1]} ${ordinals[o.d - 1]}`;
+                }
 
                 function word_to_guess(w, g) {
                     const a = new Array(5);
@@ -547,14 +708,14 @@
 
                 const ui_choice = document.getElementById("choice");
                 const ui_data = document.getElementById("data");
+                let num_lost=0,num_aborked=0;
                 {
                     let i = 0;
-                    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
                     let sum = 0;
                     for (const [k, v] of map) {
                         i++;
-                        const txt = `${k.y} ${months[k.m - 1]} ${k.d}${(k.d % 10 === 1) ? "st" : (k.d % 10 === 2) ? "nd" : (k.d % 10 === 3) ? "rd" : "th"}`;
+                        const txt = `${k.y} ${months[k.m - 1]} ${ordinals[k.d - 1]}`;
                         const input = v.ui_input = document.createElement("input");
                         const label = v.ui_label = document.createElement("label");
 
@@ -585,15 +746,21 @@
 
                             if (o.l) {
                                 inner_cont.classList.add("game-lost");
+                                num_lost++;
                             } else if (o.a) {
                                 inner_cont.classList.add("game-aborked");
+                                num_aborked++;
                             }
+                            const w = o.w.trim();
 
                             const idx = document.createElement("div");
                             idx.textContent = `${(o.index + 1)}.`;
                             const word = document.createElement("div");
-                            word.textContent = o.w;
+                            word.textContent = w;
                             word.className = "word";
+
+                            all_words_map.set(w, 1);
+
                             //   const top = document.createElement("div");
                             //    top.append(idx, word);
                             //    top.className = "game-top";
@@ -605,9 +772,14 @@
                             //     inner_cont.append(top, inner_inner_cont);
 
                             for (let i = 0; i < o.g.length; i++) {
+                                const g = o.g[i].trim();
                                 const el = document.createElement("div");
-                                el.innerHTML = word_to_guess(o.w, o.g[i]);
+                                el.innerHTML = word_to_guess(o.w, g);
                                 inner_inner_cont.append(el);
+
+                                if (!all_words_map.has(g)) {
+                                    all_words_map.set(g, 0);
+                                }
                             }
 
                             inner.append(inner_cont)
@@ -619,7 +791,30 @@
 
                     document.getElementById("choice-0").nextElementSibling.setAttribute("data-n", sum.toString());
                 }
+                {
+                    const array_of_words = [...all_words_map].sort(([a, _], [b, __]) => a.localeCompare(b));
 
+                    const alpha_inner = document.getElementById("alpha-inner");
+                    let num_w = 0, num_g = 0;
+
+                    array_of_words.forEach(([w, b]) => {
+                        const el = document.createElement("div");
+                        if (b) {
+                            num_w++;
+                        } else {
+                            num_g++;
+                            el.className = "a-g"
+                        }
+                        //  el.className = `a-${b ? "w" : "g"}`;
+                        el.textContent = w;
+                        //  b ? num_w++ : num_g++;
+
+                        alpha_inner.append(el);
+                    });
+
+                    document.getElementById("alpha-top").textContent = `${num_w + num_g} words, of which ${num_g} guesses and ${num_w} correct ones. ${num_lost} games have been lost`
+
+                }
                 const array_of_map = [...map];
                 let current_idx = 0;
 
@@ -649,12 +844,9 @@
                     });
                 }, { passive: true });
 
-                document.getElementById("input-show-guesses").addEventListener("change", e => {
-                    if (e.target.checked) {
-                        ui_data.classList.remove("no-guesses");
-                    } else {
-                        ui_data.classList.add("no-guesses");
-                    }
+                document.getElementById("top-right").addEventListener("change", e => {
+                    const t = e.target, l = t.id.split("-"), cl = `no-${l[l.length - 1]}`;
+                    document.getElementById("outer").classList[t.checked ? "remove" : "add"](cl);
                 });
             }
             "loading" === document.readyState
@@ -666,15 +858,26 @@
 
 <body>
     <div id="topbar">
+        <div id="top-left">
+        </div>
         <div id="title">Spuddle Archive</div>
-        <label id="show-guesses">Show Guesses<input type="checkbox" id="input-show-guesses" checked /></label>
+        <div id="top-right">
+            <label id="list-alpha">List Alphabetically<input type="checkbox" id="input-list-alpha" /></label>
+            <label id="show-guesses">Show Guesses<input type="checkbox" id="input-show-guesses" checked /></label>
+        </div>
     </div>
-    <div id="outer">
+    <div id="outer" class="no-alpha">
         <div id="choice">
             <input id="choice-0" type="radio" name="larry" value="0" checked />
             <label class="choice-day-label" for="choice-0"> All of them </label>
         </div>
-        <div id="data"></div>
+        <div id="data">
+            <div id="alpha">
+                <div id="alpha-top">
+                </div>
+                <div id="alpha-inner"></div>
+            </div>
+        </div>
     </div>
 </body>
 
