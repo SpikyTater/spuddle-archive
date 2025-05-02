@@ -394,7 +394,6 @@
             padding-inline-end: .3rem;
             box-sizing: border-box;
         }
-
     </style>
     <script>
         (() => {
@@ -626,6 +625,14 @@
                         { g: "miaou,opium,onium,delta,odium" },
                         { g: "ocean,fresh,queer,eerie", a: 1 },
                     ], // 2025-04-28 end
+                    "2025-05-02": [
+                        { g: "gluon,abide,sieve,withe,tithe" },
+                        { g: "miaou,other,bloke,epoxy" },
+                        { g: "title,soapy,fraud,quack" },
+                        { g: "pearl,pouch,punks,puppy" },
+                        { g: "ourie,plaud,spuds" },
+                        { g: "audio,prune,shuck,shush" },
+                    ], // 2025-05-02 end 
                 }; // data end
 
                 // value: bool -> is_correct_word
@@ -708,7 +715,7 @@
 
                 const ui_choice = document.getElementById("choice");
                 const ui_data = document.getElementById("data");
-                let num_lost=0,num_aborked=0;
+                let num_lost = 0, num_aborked = 0;
                 {
                     let i = 0;
 
@@ -761,15 +768,10 @@
 
                             all_words_map.set(w, 1);
 
-                            //   const top = document.createElement("div");
-                            //    top.append(idx, word);
-                            //    top.className = "game-top";
-
                             const inner_inner_cont = document.createElement("div");
                             inner_inner_cont.className = "innerinner word";
 
                             inner_cont.append(idx, word, inner_inner_cont);
-                            //     inner_cont.append(top, inner_inner_cont);
 
                             for (let i = 0; i < o.g.length; i++) {
                                 const g = o.g[i].trim();
@@ -805,10 +807,7 @@
                             num_g++;
                             el.className = "a-g"
                         }
-                        //  el.className = `a-${b ? "w" : "g"}`;
                         el.textContent = w;
-                        //  b ? num_w++ : num_g++;
-
                         alpha_inner.append(el);
                     });
 
